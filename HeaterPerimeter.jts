@@ -1,0 +1,423 @@
+// *************************Jail Test Script File************************************************
+// Product:				
+// Customer:			
+// Software Name:		
+// Author:              
+// **********************************************************************************************
+// **********************************************************************************************
+
+#include<"C:\\JabilTest\\scripts\\instruments_functions.jts">
+#include<"C:\\JabilTest\\scripts\\init.jts">
+
+//TP201  RES_Z1 = 581 ohms
+//TP205  RES_Z2 = 581 ohms
+
+//TP202  VDD_Z1 = 15.5 Kohms 
+//TP206  VDD_Z2 = 15.5 Kohms
+
+//TP203  SET1 = 53.3 Kohms 
+//TP207  SET2 = 53.3 Kohms
+
+
+
+
+
+// MAIN TEST ROUTINE
+// 
+// **********************************************************************************************
+call Header(); 
+call SetUp();
+
+call terminalsres();
+call Res_Z1();
+call SET1();
+call VDD_Z1();
+
+call VDD_Z2();
+call SET2();
+call Res_Z2();
+
+End;
+
+
+
+/// 
+// **********************************************************************************************
+
+// **********************************************************************************************
+function Header()
+{
+  
+  $outString = "Serial Number: " + $SerialNumber;
+  UpdateStatus($outString);
+  
+  $format = "MM/dd/yyyy h:mm:ss.ffff tt";
+
+  $time = GetSystemTimeWithFormat($format);
+
+  // Print out the time.
+  $outString = "Date and time: " + $time;
+  UpdateStatus($outString);
+  
+  UpdateStatus("");
+  UpdateStatus("-------------------------------------------------");
+  UpdateStatus("");
+
+  return;
+}
+
+// **********************************************************************************************
+function operatorPrompt()
+{
+
+      UpdateStatus("operator prompt"); // Muestra el nombre de la prueba en el estado.
+
+    ///////////////////OPERATOR PROMPT UUT//////////////////
+  
+    
+    $PictureMode = "STRETCH"; // Define el modo de visualización de la imagen (centrado).
+    $WindowHeight = 720; // Define la altura de la ventana de la imagen.
+    $WindowWidth = 1200; // Define el ancho de la ventana de la imagen.
+  
+
+    OperatorPicturePrompt($PromptString, $GraphicFilePath, $PictureMode, $WindowHeight, $WindowWidth); // Muestra la imagen y solicita la interacción del operador.
+    
+  
+    ///////////////////Counter//////////////////
+  
+    $ImagePath = New("String", $GraphicFilePath);
+    //OperatorCountDownTimer("Midiendo en:", 5, true); 
+  
+    ShowDelayPicture($ImagePath,1200,700,100,3);
+  
+    ///////////////////Measure//////////////////
+  
+    UpdateStatus("measuring"); // Muestra el nombre de la prueba en el estado.
+    
+    return;
+  }
+// **********************************************************************************************
+  
+  function SetUp()
+  {
+    $Name = "SetUp";
+  
+    $PromptString = "Coloque la tarjeta con las terminales doradas hacia el lado derecho"; // Mensaje para el operador.
+    $GraphicFilePath ="C:\\JabilTest\\scripts\\Heater Perimeter\\" + $Name + ".jpg"; // Ruta del archivo de imagen a mostrar.
+    $PictureMode = "STRETCH"; // Define el modo de visualización de la imagen (centrado).
+    $WindowHeight = 720; // Define la altura de la ventana de la imagen.
+    $WindowWidth = 1200; // Define el ancho de la ventana de la imagen.
+  
+
+    OperatorPicturePrompt($PromptString, $GraphicFilePath, $PictureMode, $WindowHeight, $WindowWidth); // Muestra la imagen y solicita la interacción del operador.
+    
+  
+      UpdateStatus("");
+      UpdateStatus("-------------------------------------------------");
+      UpdateStatus("");
+    return;
+    
+    
+    }
+
+// **********************************************************************************************
+    
+    function terminalsres()
+{
+  SetTestName("terminals");
+  
+  $Name = "terminals";
+  $Pin = " ";
+  //$Pin = " Pin " + $Pin;
+  $PromptString = "Coloquese en las terminales doradas a la derecha de la tarjeta \nColoque la punta roja en la terminal de arriba\nColoque la punta negra en la terminal de abajo \nPresione la tecla ESPACIO para continuar y espere a aque se realice la medicion"; // Mensaje para el operador.
+  $GraphicFilePath ="C:\\JabilTest\\scripts\\Heater Perimeter\\" + $Name + ".jpg"; // Ruta del archivo de imagen a mostrar.
+  
+  call operatorPrompt();
+
+  
+  call DMMReadImpedance();
+  $measName = $Name;
+  $measUnit = "omhs"; // Unidad de la medición.
+  $parametric = true; // Indica que la medición es paramétrica.
+  $failOnLimits = true;
+  $lowerLimit =  450;
+  $upperLimit = 655;
+  
+   
+
+
+   RecordMeasurementWithLimits($measName, $measure, $measUnit, $parametric, $lowerLimit, $upperLimit, $failOnLimits); // Registra la medición y verifica si está dentro de los límites.
+   $measure = $measure * 1;
+   $Result = $Name + $Pin + $measure + " " + $measUnit;
+   UpdateStatus($Result)
+    
+    UpdateStatus("");
+    UpdateStatus("-------------------------------------------------");
+    UpdateStatus("");
+    
+    $terminals = $measure;
+    
+    
+  return; 
+  
+  }
+  
+      // **********************************************************************************************
+	//Segundo sensor
+     // **********************************************************************************************
+  
+  
+  
+  function Res_Z1()
+  {
+     SetTestName("Res_Z1");
+  
+  $Name = "Res_Z1";
+  $Pin = "201 ";
+  $Pin = " TP" + $Pin;
+  $PromptString = "Coloquese en las terminales doradas a la derecha de la tarjeta \nColoque la punta roja en la terminal de arriba\nColoque la punta negra en la terminal de abajo \nPresione la tecla ESPACIO para continuar y espere a aque se realice la medicion"; // Mensaje para el operador.
+  $GraphicFilePath ="C:\\JabilTest\\scripts\\Heater Perimeter\\" + $Name + ".jpg"; // Ruta del archivo de imagen a mostrar.
+  
+  call operatorPrompt();
+
+  
+  call DMMReadImpedance();
+  $measName = $Name;
+  $measUnit = "omhs"; // Unidad de la medición.
+  $parametric = true; // Indica que la medición es paramétrica.
+  $failOnLimits = true;
+  $lowerLimit =  523;
+  $upperLimit = 640;
+  
+   
+
+
+   RecordMeasurementWithLimits($measName, $measure, $measUnit, $parametric, $lowerLimit, $upperLimit, $failOnLimits); // Registra la medición y verifica si está dentro de los límites.
+  
+   $measure = $measure * 1;
+   $Result = $Name + $Pin + $measure + " " + $measUnit;
+   UpdateStatus($Result)
+    
+    UpdateStatus("");
+    UpdateStatus("-------------------------------------------------");
+    UpdateStatus("");
+    
+    $Res_Z1 = $measure;
+    
+    return; 
+    
+    }
+    
+    // **********************************************************************************************
+  
+  
+  function SET1()
+  {
+     SetTestName("SET1");
+  
+  $Name = "SET1";
+  $Pin = "203 ";
+  $Pin = " TP" + $Pin;
+  $PromptString = "Coloquese en las terminales doradas a la derecha de la tarjeta \nColoque la punta roja en la terminal de arriba\nColoque la punta negra en la terminal de abajo \nPresione la tecla ESPACIO para continuar y espere a aque se realice la medicion"; // Mensaje para el operador.
+  $GraphicFilePath ="C:\\JabilTest\\scripts\\Heater Perimeter\\" + $Name + ".jpg"; // Ruta del archivo de imagen a mostrar.
+  
+  call operatorPrompt();
+
+  
+  call DMMReadImpedance();
+  $measName = $Name;
+  $measUnit = "omhs"; // Unidad de la medición.
+  $parametric = true; // Indica que la medición es paramétrica.
+  $failOnLimits = true;
+  $lowerLimit =  48000;
+  $upperLimit = 58650;
+  
+   
+
+
+   RecordMeasurementWithLimits($measName, $measure, $measUnit, $parametric, $lowerLimit, $upperLimit, $failOnLimits); // Registra la medición y verifica si está dentro de los límites.
+   $measure = $measure * 1;
+   $Result = $Name + $Pin + $measure + " " + $measUnit;
+   UpdateStatus($Result)
+    
+    UpdateStatus("");
+    UpdateStatus("-------------------------------------------------");
+    UpdateStatus("");
+    
+    $SET1 = $measure;
+  return; 
+    
+    }
+    
+        
+    // **********************************************************************************************
+  
+  
+  function VDD_Z1()
+  {
+     SetTestName("VDD_Z1");
+  
+  $Name = "VDD_Z1";
+  $Pin = "202 ";
+  $Pin = " TP" + $Pin;
+  $PromptString = "Coloquese en las terminales doradas a la derecha de la tarjeta \nColoque la punta roja en la terminal de arriba\nColoque la punta negra en la terminal de abajo \nPresione la tecla ESPACIO para continuar y espere a aque se realice la medicion"; // Mensaje para el operador.
+  $GraphicFilePath ="C:\\JabilTest\\scripts\\Heater Perimeter\\" + $Name + ".jpg"; // Ruta del archivo de imagen a mostrar.
+  
+  call operatorPrompt();
+
+  
+  call DMMReadImpedance();
+  $measName = $Name;
+  $measUnit = "omhs"; // Unidad de la medición.
+  $parametric = true; // Indica que la medición es paramétrica.
+  $failOnLimits = true;
+  $lowerLimit =  9900;
+  $upperLimit = 12100;
+  
+   
+
+
+   RecordMeasurementWithLimits($measName, $measure, $measUnit, $parametric, $lowerLimit, $upperLimit, $failOnLimits); // Registra la medición y verifica si está dentro de los límites.
+   $measure = $measure * 1;
+   $Result = $Name + $Pin + $measure + " " + $measUnit;
+   UpdateStatus($Result)
+    
+    UpdateStatus("");
+    UpdateStatus("-------------------------------------------------");
+    UpdateStatus("");
+    
+    $VDD_Z1 = $measure;
+    
+    return; 
+    
+    }
+
+    
+     // **********************************************************************************************
+	//Segundo sensor
+     // **********************************************************************************************
+  
+  
+  
+  function VDD_Z2()
+  {
+     SetTestName("VDD_Z2");
+  
+  $Name = "VDD_Z2";
+  $Pin = "206 ";
+  $Pin = " TP" + $Pin;
+  $PromptString = "Coloquese en las terminales doradas a la derecha de la tarjeta \nColoque la punta roja en la terminal de arriba\nColoque la punta negra en la terminal de abajo \nPresione la tecla ESPACIO para continuar y espere a aque se realice la medicion"; // Mensaje para el operador.
+  $GraphicFilePath ="C:\\JabilTest\\scripts\\Heater Perimeter\\" + $Name + ".jpg"; // Ruta del archivo de imagen a mostrar.
+  
+  call operatorPrompt();
+
+  
+  call DMMReadImpedance();
+  $measName = $Name;
+  $measUnit = "omhs"; // Unidad de la medición.
+  $parametric = true; // Indica que la medición es paramétrica.
+  $failOnLimits = true;
+  $lowerLimit =  9900;
+  $upperLimit = 12100;
+  
+   
+
+
+   RecordMeasurementWithLimits($measName, $measure, $measUnit, $parametric, $lowerLimit, $upperLimit, $failOnLimits); // Registra la medición y verifica si está dentro de los límites.
+   $measure = $measure * 1;
+   $Result = $Name + $Pin + $measure + " " + $measUnit;
+   UpdateStatus($Result)
+    
+    UpdateStatus("");
+    UpdateStatus("-------------------------------------------------");
+    UpdateStatus("");
+    
+    $VDD_Z2 = $measure;
+    
+    return; 
+    
+    }
+    
+     // **********************************************************************************************
+  
+  
+  function SET2()
+  {
+     SetTestName("SET2");
+  
+  $Name = "SET2";
+  $Pin = "207 ";
+  $Pin = " TP" + $Pin;
+  $PromptString = "Coloquese en las terminales doradas a la derecha de la tarjeta \nColoque la punta roja en la terminal de arriba\nColoque la punta negra en la terminal de abajo \nPresione la tecla ESPACIO para continuar y espere a aque se realice la medicion"; // Mensaje para el operador.
+  $GraphicFilePath ="C:\\JabilTest\\scripts\\Heater Perimeter\\" + $Name + ".jpg"; // Ruta del archivo de imagen a mostrar.
+  
+  call operatorPrompt();
+
+  
+  call DMMReadImpedance();
+  $measName = $Name;
+  $measUnit = "omhs"; // Unidad de la medición.
+  $parametric = true; // Indica que la medición es paramétrica.
+  $failOnLimits = true;
+  $lowerLimit =  48000;
+  $upperLimit = 58650;
+  
+   
+
+
+   RecordMeasurementWithLimits($measName, $measure, $measUnit, $parametric, $lowerLimit, $upperLimit, $failOnLimits); // Registra la medición y verifica si está dentro de los límites.
+   $measure = $measure * 1;
+   $Result = $Name + $Pin + $measure + " " + $measUnit;
+   UpdateStatus($Result)
+    
+    UpdateStatus("");
+    UpdateStatus("-------------------------------------------------");
+    UpdateStatus("");
+    
+    $SET2 = $measure;
+  return; 
+    
+    }
+    
+     // **********************************************************************************************
+    
+    function Res_Z2()
+  {
+     SetTestName("Res_Z2");
+  
+  $Name = "Res_Z2";
+  $Pin = "205 ";
+  $Pin = " TP" + $Pin;
+  $PromptString = "Coloquese en las terminales doradas a la derecha de la tarjeta \nColoque la punta roja en la terminal de arriba\nColoque la punta negra en la terminal de abajo \nPresione la tecla ESPACIO para continuar y espere a aque se realice la medicion"; // Mensaje para el operador.
+  $GraphicFilePath ="C:\\JabilTest\\scripts\\Heater Perimeter\\" + $Name + ".jpg"; // Ruta del archivo de imagen a mostrar.
+  
+  call operatorPrompt();
+
+  
+  call DMMReadImpedance();
+  $measName = $Name;
+  $measUnit = "omhs"; // Unidad de la medición.
+  $parametric = true; // Indica que la medición es paramétrica.
+  $failOnLimits = true;
+  $lowerLimit =  523;
+  $upperLimit = 640;
+  
+   
+
+
+   RecordMeasurementWithLimits($measName, $measure, $measUnit, $parametric, $lowerLimit, $upperLimit, $failOnLimits); // Registra la medición y verifica si está dentro de los límites.
+  
+   $measure = $measure * 1;
+   $Result = $Name + $Pin + $measure + " " + $measUnit;
+   UpdateStatus($Result)
+    
+    UpdateStatus("");
+    UpdateStatus("-------------------------------------------------");
+    UpdateStatus("");
+    
+    $Res_Z2 = $measure;
+    
+    return; 
+    
+    }
+  
