@@ -6,8 +6,8 @@
 // **********************************************************************************************
 // **********************************************************************************************
 
-#include<"C:\\JabilTest\\scripts\\instruments_functions.jts">
-#include<"C:\\JabilTest\\scripts\\init.jts">
+//#include<"C:\\JabilTest\\scripts\\instruments_functions.jts">
+//#include<"C:\\JabilTest\\scripts\\init.jts">
 
 //TP201  RES_Z1 = 581 ohms
 //TP205  RES_Z2 = 581 ohms
@@ -29,6 +29,8 @@
  $headersCSV = "";
  $MeasuringsCSV = "";
 //PSU tests
+
+//call Initialize();
 call Header(); 
 call SetUp();
 
@@ -146,10 +148,10 @@ function operatorPrompt()
   $measUnit = "omhs"; // Unidad de la medición.
   $parametric = true; // Indica que la medición es paramétrica.
   $failOnLimits = true;
-  //$lowerLimit =  450;
-  //$upperLimit = 655;
-  $lowerLimit =  225;
-  $upperLimit = 325;
+  $lowerLimit =  450;
+  $upperLimit = 655;
+//$lowerLimit =  225;
+  //$upperLimit = 325;
   
    
 
@@ -196,11 +198,11 @@ function operatorPrompt()
   $measUnit = "omhs"; // Unidad de la medición.
   $parametric = true; // Indica que la medición es paramétrica.
   $failOnLimits = true;
-    //$lowerLimit =  523;
-  //$upperLimit = 640;
+  $lowerLimit =  523;
+  $upperLimit = 640;
     
-  $lowerLimit =  260;
-  $upperLimit = 320;
+  //$lowerLimit =  260;
+  //$upperLimit = 320;
   
    
 
@@ -421,11 +423,11 @@ function operatorPrompt()
   $measUnit = "omhs"; // Unidad de la medición.
   $parametric = true; // Indica que la medición es paramétrica.
   $failOnLimits = true;
-  //$lowerLimit =  523;
-  //$upperLimit = 640;
+  $lowerLimit =  523;
+  $upperLimit = 640;
     
-  $lowerLimit =  260;
-  $upperLimit = 320;
+  //$lowerLimit =  260;
+  //$upperLimit = 320;
   
   
    
@@ -472,3 +474,34 @@ function CSV_data_gather()
     
     return;
     }
+    
+    
+    
+    
+    
+    
+    
+    
+// ********************************************************************************************** 
+    
+    
+function DMMReadImpedance()
+{	
+   
+  UpdateStatus("");
+  UpdateStatus("DMMReadImpedance"); // Muestra el nombre de la prueba en el estado.
+
+  UpdateStatus("");
+  $outString = ":CONFigure:RESistance"; // Configura el instrumento para medir resistencia de 4 hilos.
+  IviGPIB_Write($DMMHandler, $outString); // Envía el comando al dispositivo GPIB.
+
+  $outString = ":MEASure:RESistance?"; // Solicita la medición de resistencia de 4 hilos.
+  IviGPIB_Write($DMMHandler, $outString); // Envía el comando al dispositivo GPIB.
+  Sleep(1); // Espera 1 segundo para que el dispositivo realice la medición.
+  $measure = IviGPIB_Read($DMMHandler); // Lee el resultado de la medición desde el dispositivo.
+  $measure = $measure * 1;
+  return; // Finaliza la función `DMMReadImpedance`.
+}
+
+
+// **********************************************************************************************
